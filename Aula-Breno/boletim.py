@@ -1,6 +1,7 @@
 import pyfiglet
 from colorama import init, Fore, Back, Style
-import rich
+from rich.console import Console
+from rich.table import Table
 import os
 
 init()
@@ -12,41 +13,68 @@ def LimparTela():
     os.system('cls')
 
 LimparTela()
+init(autoreset=True)
+console = Console()
+
 print(Fore.CYAN + pyfiglet.figlet_format("Escola Novo Saber"))
-print(Fore.GREEN + pyfiglet.figlet_format("Sistema de lançamento da minha piroca alada flamejante"))
+print(Fore.GREEN + pyfiglet.figlet_format("Sistema de lançamento da minha caceta alada flamejante"))
+Style.RESET_ALL
 
+# Mostrar título
+def titulo():
+    banner = pyfiglet.figlet_format("Novo Saber")
+    print(Fore.CYAN + banner)
+    print(Fore.YELLOW + "Sistema Escolar de Lançamento de Notas\n" + Style.RESET_ALL)
 
-titulo = "Boletim estudantil"
-print(Fore.LIGHTBLUE_EX + titulo)
+# Cadastro fixo de 3 alunos
+alunos = []
+for i in range(3):
+    nome = input(f"Digite o nome do aluno {i+1}: ")
+    turma = input("Digite a turma: ")
+    alunos.append({"id": i+1, "nome": nome, "turma": turma})
 
-# Style.RESET_ALL: Reseta todos os estilos e cores ao padrÃ£o, prevenindo que eles sejam aplicados a textos que vocÃª nÃ£o deseja estilizar.
-print(Style.RESET_ALL + 'nada mais para ver aqui')
-
-def cadastro_aluno():
-    id_aluno = len(alunos) + 1
-    nome = input("Nome do aluno: ")
-    turma = input("Turma: ")
-    alunos.append({"id": id_aluno, "nome": nome, "turma": turma})
-    print(Fore.YELLOW + f"Aluno {nome} cadastrado com sucesso!\n")
-
-def cadastro_disciplina():
-    codigo = input("Código da disciplina: ")
-    nome = input("Nome da disciplina: ")
+# Cadastro fixo de 2 disciplinas
+disciplinas = []
+for i in range(2):
+    codigo = input(f"Digite o código da disciplina {i+1}: ").upper()
+    nome = input("Digite o nome da disciplina: ")
     disciplinas.append({"codigo": codigo, "nome": nome})
 
-def lancar_notas():
-    if not alunos or not disciplinas:
-        print(Fore.RED + "Cadastre ao menos uma nota e uma disciplina\n")
-        return
-
-print("Alunos disponiveis")
+# Lançamento de notas
+notas = {}
 for aluno in alunos:
-    print(f"{aluno['id']} - {aluno['nome']} ({aluno['turma']})")
-id_aluno = int(input("Digite o ID do aluno: "))
+    for disc in disciplinas:
+        print(f"\nLançando notas para {aluno['nome']} em {disc['nome']}:")
+        p1 = float(input("Nota P1: "))
+        p2 = float(input("Nota P2: "))
+        trab = float(input("Nota Trabalho: "))
+        notas[(aluno["id"], disc["codigo"])] = {"P1": p1, "P2": p2, "Trabalho": trab}
 
-print("Disciplinas disponíveis:")
-for disc in disciplinas:
-    print(f"{disc['codigo']} - {disc['nome']}")
-codigo = input("Digite o código da disciplina: ").upper()
+# Gerar boletim por aluno
+for aluno in alunos:
+    table = Table(title=f"Boletim - {aluno['nome']} ({aluno['turma']})")
+    table.add_column("Disciplina")
+    table.add_column("P1")
+    table.add_column("P2")
+    table.add_column("Trabalho")
+    table.add_column("Média")
+    table.add_column("Status")
+
+    for disc in disciplinas:
+        n = notas[(aluno["id"], disc["codigo"])]
+        media = (n["P1"] + n["P2"] + n["Trabalho"]) / 3
+        if media >= 7:
+            status = Fore.GREEN + "Aprovado"
+            Style.RESET_ALL
+        elif media >= 5:
+            status = Fore.YELLOW + "Recuperação"
+            Style.RESET_ALL
+        else:
+            status = Fore.RED + "Reprovado"
+            Style.RESET_ALL
+        table.add_row(disc["nome"], str(n["P1"]), str(n["P2"]), str(n["Trabalho"]), f"{media:.1f}", status)
+
+    console.print(table)
+    print("\n")
 
 
