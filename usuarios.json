@@ -1,0 +1,16 @@
+{
+    "1": {
+        "username": "luish",
+        "password_hash": "6ab05db32419069ec7d93c1e95b8c32b55de7bd3c43a6e402732427045462580",
+        "tipo": "user",
+        "nome_completo": "Luis Henrique",
+        "data_criacao": "2025-09-19"
+    },
+    "2": {
+        "username": "Leticia Guaxinim",
+        "password_hash": "11b656afa0098e45612c4a43df241099e32b2b3cb504d160f259c8ee734191f1",
+        "tipo": "user",
+        "nome_completo": "Leticia Guaxinim Martins",
+        "data_criacao": "2025-09-19"
+    }
+}

@@ -1,43 +1,131 @@
-import pyfiglet
-import os
-from colorama import Fore, Style, init
-import hashlib
 import hashlib
 import json
+import os
 from datetime import datetime
+from colorama import Fore, init
+import pyfiglet
+from rich.console import Console
+from rich.table import Table
 
-def criptografar_senha(senha):
-    salt = "biblioteca_digital_2025"  # Salt fixo para simplicidade
-    senha_com_salt = senha + salt
-    hash_senha = hashlib.sha256(senha_com_salt.encode()).hexdigest()
-    return hash_senha
+################################################################### init
+init(autoreset=True);
+console = Console();
 
-def verificar_senha(senha_digitada, hash_armazenado):
-    hash_digitada = criptografar_senha(senha_digitada)
-    return hash_digitada == hash_armazenado
+############################################################################# menu's shenanigans
+def ExibirTitulo(texto):
+    banner = pyfiglet.figlet_format(texto, font="slant");
+    print(Fore.CYAN + banner);
 
-# Exemplo de estrutura do usuarios.json
-usuarios = {
-    "1": {
-        "username": "admin",
-        "password_hash": "null",
-        "tipo": "admin",
-        "nome_completo": "Administrador Sistema",
-        "data_criacao": "2025-09-16"
-    },
-    "2": {
-        "username": "joao123",
-        "password_hash": "ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f",
+def MostrarMenu(opcoes):
+    i = 1
+    for opcao in opcoes:
+        print(f"{i} - {opcao}");
+        i += 1;
+
+def LerOpcao():
+    while True:
+        opcao_digitada = input("Selecione uma opção: ")
+        if opcao_digitada.isdigit():
+            return int(opcao_digitada);
+        else:
+            print(Fore.RED + "! Opção inválida, digite um número.");
+
+def LimparTela():
+    os.system('cls');
+
+################################################################################### criptografia
+def CriptoSenha(senha):
+    salt = "biblioteca_digital_2025";
+    senha_com_salt = senha + salt;
+    return hashlib.sha256(senha_com_salt.encode()).hexdigest();
+
+def VerificarSenha(senha_digitada, hash_armazenado):
+    return criptografar_senha(senha_digitada) == hash_armazenado;
+
+############################################################################# dados
+def CarregarDados(arquivo):
+    if os.path.exists(arquivo):
+        with open(arquivo, "r", encoding="utf-8") as f:
+            return json.load(f);
+    return {};
+
+def SalvarDados(arquivo, dados):
+    with open(arquivo, "w", encoding="utf-8") as f:
+        json.dump(dados, f, indent=4, ensure_ascii=False);
+
+################################################################### users
+usuarios_file = "usuarios.json";
+usuarios = CarregarDados(usuarios_file);
+
+def CadastrarUsuario():
+    username = input("Digite o username: ");
+    if any(u["username"] == username for u in usuarios.values()):
+        print(Fore.RED + " ! Usuário já existe!");
+        return;
+    
+    senha = input("Digite a senha (mín. 6 caracteres): ");
+    if len(senha) < 6:
+        print(Fore.RED + " ! Senha muito curta!");
+        return;
+    
+    nome = input("Nome completo: ");
+    novo_id = str(len(usuarios) + 1);
+    usuarios[novo_id] = {
+        "username": username,
+        "password_hash": CriptoSenha(senha),
         "tipo": "user",
-        "nome_completo": "João Silva Santos",
-        "data_criacao": "2025-09-16"
+        "nome_completo": nome,
+        "data_criacao": datetime.now().strftime("%Y-%m-%d")
     }
-}
-hash_atual = usuarios["1"]["password_hash"];
-print(f"O hash atual do usuário 1 é: {hash_atual}");
+    SalvarDados(usuarios_file, usuarios);
+    print(Fore.GREEN + " Usuário cadastrado com sucesso!");
 
-senha = input("Digite a senha: ");
-hash_novo = criptografar_senha(senha);
+def Login():
+    username = input("Usuário: ");
+    senha = input("Senha: ");
+    for user in usuarios.values():
+        if user["username"] == username and VerificarSenha(senha, user["password_hash"]):
+            print(Fore.GREEN + f" Bem-vindo, {user['nome_completo']}!");
+            return user;
+    print(Fore.RED + "! Usuário ou senha inválidos.");
+    return None;
 
-usuarios["1"]["password_hash"] = hash_novo;
-print(f"O hash da senha do usuário 1 é: {usuarios["1"]["password_hash"]}")
+def ListarUsuarios():
+    table = Table(title=" Usuários Cadastrados");
+    table.add_column("ID", style="cyan");
+    table.add_column("Username");
+    table.add_column("Nome Completo");
+    table.add_column("Tipo");
+    table.add_column("Data Criação");
+
+    for uid, u in usuarios.items():
+        table.add_row(uid, u["username"], u["nome_completo"], u["tipo"], u["data_criacao"]);
+    
+    console.print(table);
+
+################################################################### menu
+def MenuPrincipal():
+    opcoes = ["Login", "Cadastrar Usuário", "Listar Usuários", "Sair"];
+    while True:
+        ExibirTitulo("Biblioteca Conhecimento Digital");
+        MostrarMenu(opcoes);
+        opt = LerOpcao();
+
+        if opt == 1:
+            Login();
+        elif opt == 2:
+            CadastrarUsuario();
+        elif opt == 3:
+            ListarUsuarios();
+        elif opt == 4:
+            print(Fore.YELLOW + "Saindo do sistema...");
+            break
+        else:
+            print(Fore.RED + "Opção inválida.");
+
+############################################################### main
+
+
+if __name__ == "__main__":
+    LimparTela();
+    MenuPrincipal();
