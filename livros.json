@@ -1,0 +1,44 @@
+{
+    "255969": {
+        "titulo": "Matemática avançada! Multiplicando par por 0 e dando 1",
+        "autor": "Christian",
+        "categoria": "Ficção cientifica",
+        "disponivel": true,
+        "data_cadastro": "2025-09-23"
+    },
+    "445918": {
+        "titulo": "Modo ninja de ser! Torne-se um Thundercat",
+        "autor": "Coach Aldriano",
+        "categoria": "Motivacional",
+        "disponivel": true,
+        "data_cadastro": "2025-09-23"
+    },
+    "258946": {
+        "titulo": "Hair Stylist 101",
+        "autor": "Luís Henrique Brites",
+        "categoria": "Terror",
+        "disponivel": true,
+        "data_cadastro": "2025-09-23"
+    },
+    "451023": {
+        "titulo": "Como ser o centro das atenções em todo lugar",
+        "autor": "Rachel Pickmee",
+        "categoria": "Delírio ",
+        "disponivel": true,
+        "data_cadastro": "2025-09-23"
+    },
+    "541897": {
+        "titulo": "Como lutar com uma onça e vencer!",
+        "autor": "Jarbas, a Lenda",
+        "categoria": "Ficção",
+        "disponivel": true,
+        "data_cadastro": "2025-09-23"
+    },
+    "456321": {
+        "titulo": "Como gostar da linguagem pyton em 5 dias!",
+        "autor": "Absolute Ninguem",
+        "categoria": "Ficção",
+        "disponivel": true,
+        "data_cadastro": "2025-09-23"
+    }
+}

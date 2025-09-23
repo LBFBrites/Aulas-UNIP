@@ -12,5 +12,26 @@
         "tipo": "user",
         "nome_completo": "Leticia Guaxinim Martins",
         "data_criacao": "2025-09-19"
+    },
+    "3": {
+        "username": "admin",
+        "password_hash": "0ef01523320af1932b2567a6243fa52ab964d138d870f9555de742113d8c7d04",
+        "tipo": "user",
+        "nome_completo": "admin",
+        "data_criacao": "2025-09-23"
+    },
+    "4": {
+        "username": "Teste1",
+        "password_hash": "1e2fa983912dbd271d0f674778301d437aa0a3c5779f099df9695437f5db774b",
+        "tipo": "user",
+        "nome_completo": "Teste de Menu",
+        "data_criacao": "2025-09-23"
+    },
+    "5": {
+        "username": "UserPC",
+        "password_hash": "7cbc8cee0f206b1dcdd0e3bb193f04986e083198a7a687cc5c2838c20f379600",
+        "tipo": "user",
+        "nome_completo": "UsuarioPc",
+        "data_criacao": "2025-09-23"
     }
 }

@@ -40,7 +40,7 @@ def CriptoSenha(senha):
     return hashlib.sha256(senha_com_salt.encode()).hexdigest();
 
 def VerificarSenha(senha_digitada, hash_armazenado):
-    return criptografar_senha(senha_digitada) == hash_armazenado;
+    return CriptoSenha(senha_digitada) == hash_armazenado;
 
 ############################################################################# dados
 def CarregarDados(arquivo):
@@ -53,10 +53,14 @@ def SalvarDados(arquivo, dados):
     with open(arquivo, "w", encoding="utf-8") as f:
         json.dump(dados, f, indent=4, ensure_ascii=False);
 
-################################################################### users
+################################################################### files & dados
 usuarios_file = "usuarios.json";
-usuarios = CarregarDados(usuarios_file);
+livros_file = "livros.json";
 
+usuarios = CarregarDados(usuarios_file);
+livros = CarregarDados(livros_file);
+
+################################################################### users
 def CadastrarUsuario():
     username = input("Digite o username: ");
     if any(u["username"] == username for u in usuarios.values()):
@@ -103,11 +107,74 @@ def ListarUsuarios():
     
     console.print(table);
 
+################################################################### livros
+def CadastrarLivro():
+    isbn = input("ISBN (somente números): ");
+    if not isbn.isdigit():
+        print(Fore.RED + " ! ISBN deve ser numérico!");
+        return;
+    if isbn in livros:
+        print(Fore.RED + " ! Livro já cadastrado!");
+        return;
+    
+    titulo = input("Título: ");
+    autor = input("Autor: ");
+    categoria = input("Categoria: ");
+    novo = {
+        "titulo": titulo,
+        "autor": autor,
+        "categoria": categoria,
+        "disponivel": True,
+        "data_cadastro": datetime.now().strftime("%Y-%m-%d")
+    }
+    livros[isbn] = novo;
+    SalvarDados(livros_file, livros);
+    print(Fore.GREEN + "Livro cadastrado com sucesso!");
+
+def ListarLivros():
+    table = Table(title="Acervo - Livros Cadastrados");
+    table.add_column("ISBN", style="cyan");
+    table.add_column("Título");
+    table.add_column("Autor");
+    table.add_column("Categoria");
+    table.add_column("Status");
+
+    for isbn, l in livros.items():
+        status = "Disponível" if l.get("disponivel", True) else "Emprestado"
+        table.add_row(isbn, l.get("titulo","-"), l.get("autor","-"), l.get("categoria","-"), status);
+    
+    console.print(table);
+
+################################################################### seleção simples
+def SelecionarLivro():
+    if not livros:
+        print(Fore.RED + "Nenhum livro cadastrado ainda.")
+        return None
+    ListarLivros()
+    escolhido = input("Digite o ISBN do livro que deseja selecionar: ")
+    print(Fore.GREEN + f"Livro selecionado: {escolhido}")
+    return escolhido
+
+################################################################### emprestimos & devolução
+def AbrirEmprestimos():
+    print(Fore.YELLOW + "=== Menu de Empréstimos ===")
+    SelecionarLivro()
+    print(Fore.YELLOW + "Empréstimo em análise...")
+
+def AbrirDevolucao():
+    print(Fore.YELLOW + "=== Menu de Devolução ===")
+    SelecionarLivro()
+    print(Fore.GREEN + "Devolução concluída.")
+
 ################################################################### menu
 def MenuPrincipal():
-    opcoes = ["Login", "Cadastrar Usuário", "Listar Usuários", "Sair"];
+    opcoes = [
+        "Login", "Cadastrar Usuário", "Listar Usuários",
+        "Cadastrar Livro", "Listar Livros",
+        "Empréstimos", "Devolução", "Sair"
+    ];
     while True:
-        ExibirTitulo("Biblioteca Conhecimento Digital");
+        ExibirTitulo("Biblioteca");
         MostrarMenu(opcoes);
         opt = LerOpcao();
 
@@ -118,14 +185,20 @@ def MenuPrincipal():
         elif opt == 3:
             ListarUsuarios();
         elif opt == 4:
+            CadastrarLivro();
+        elif opt == 5:
+            ListarLivros();
+        elif opt == 6:
+            AbrirEmprestimos();
+        elif opt == 7:
+            AbrirDevolucao();
+        elif opt == 8:
             print(Fore.YELLOW + "Saindo do sistema...");
             break
         else:
             print(Fore.RED + "Opção inválida.");
 
 ############################################################### main
-
-
 if __name__ == "__main__":
     LimparTela();
     MenuPrincipal();
