@@ -8,4 +8,3 @@ def criptografar(mensagem, chave):
 
 criptografia = criptografar("cripto", 5)
 print(criptografia)
-        
