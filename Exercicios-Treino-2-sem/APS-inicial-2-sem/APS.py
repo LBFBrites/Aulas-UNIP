@@ -91,7 +91,7 @@ def main():
             selectedUser = users[userChoice - 1]
             userMessages = [m for m in messages if m["user"] == selectedUser]
 
-            if not user_messages:
+            if not userMessages:
                 print("\nEsse usuário não tem mensagens salvas.")
                 continue
 
