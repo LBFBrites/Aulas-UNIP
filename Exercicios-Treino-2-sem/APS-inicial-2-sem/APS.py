@@ -55,11 +55,11 @@ def main():
             }
             messages.append(record)
             saveMessages(messages)
-            print("\nMensagem salva com sucesso!")
+            print("\n Mensagem salva com sucesso!")
 
         elif option == "2":
             if not messages:
-                print("\nNenhuma mensagem salva ainda.")
+                print("\n Nenhuma mensagem salva ainda.")
             else:
                 print("\n Mensagens salvas ")
                 for i, msg in enumerate(messages, 1):
@@ -71,7 +71,7 @@ def main():
 
         elif option == "4":
             if not messages:
-                print("\nNenhuma mensagem para descriptografar.")
+                print("\n Nenhuma mensagem para descriptografar.")
                 continue
 
             users = sorted(set(msg["user"] for msg in messages))
@@ -80,7 +80,7 @@ def main():
                 print(f"{i}. {user}")
 
             try:
-                userChoice = int(input("\nEscolha o ID do usuário: "))
+                userChoice = int(input("\n Escolha o ID do usuário: "))
                 if userChoice < 1 or userChoice > len(users):
                     print("ID de usuário inválido.")
                     continue
@@ -95,7 +95,7 @@ def main():
                 print("\nEsse usuário não tem mensagens salvas.")
                 continue
 
-            print(f"\n--- Mensagens do usuário: {selectedUser} ---")
+            print(f"\n Mensagens do usuário: {selectedUser} ")
             for i, msg in enumerate(userMessages, 1):
                 print(f"{i}. Criptografada: {msg['cripto']}")
                 print(f"   Hash: {msg['hash']}\n")
