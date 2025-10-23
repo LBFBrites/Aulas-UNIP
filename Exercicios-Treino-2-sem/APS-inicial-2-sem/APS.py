@@ -26,8 +26,8 @@ def cripto(text, password):
     random = "".join(chr((ord(c) + len(password)) % 256) for c in text)
     return random, hashHex
 
-def decripto(cripto_text, password):
-    original = "".join(chr((ord(c) - len(password)) % 256) for c in cripto_text)
+def decripto(criptoText, password):
+    original = "".join(chr((ord(c) - len(password)) % 256) for c in criptoText)
     return original
 
 def main():
