@@ -1,9 +1,9 @@
 import hashlib
 import json
 import os
+from datetime import datetime 
 
 ARCHIVE = "messages.json"
-
 
 def loadMessages():
     if not os.path.exists(ARCHIVE):
@@ -38,8 +38,9 @@ def main():
         print("1 - Adicionar nova mensagem")
         print("2 - Listar mensagens salvas")
         print("3 - Sair")
-        print("4 - Descriptografar mensagem")  # nova opção
+        print("4 - Descriptografar mensagem")
         option = input("Escolha: ").strip()
+
 
         if option == "1":
             user = input("Digite o nome do usuário: ").strip()
@@ -47,12 +48,15 @@ def main():
             password = input("Digite uma senha/chave: ")
             random, hashHex = cripto(text, password)
 
+
             record = {
                 "user": user,
                 "message": text,
                 "cripto": random,
-                "hash": hashHex
+                "hash": hashHex,
+                "timestamp": datetime.now().strftime("%d/%m/%Y %H:%M:%S")
             }
+
             messages.append(record)
             saveMessages(messages)
             print("\n Mensagem salva com sucesso!")
@@ -66,9 +70,11 @@ def main():
                     user = msg.get("user", "Desconhecido")
                     print(f"{i}. Usuário: {user}")
                     print(f"   Criptografada: {msg['cripto']}")
-                    print(f"   Hash: {msg['hash']}\n")
+                    print(f"   Hash: {msg['hash']}")
+                    print(f"   Data/Hora: {msg.get('timestamp', 'N/A')}\n")
                 print("(* Para ver o texto original, use a opção 4.)")
 
+     
         elif option == "4":
             if not messages:
                 print("\n Nenhuma mensagem para descriptografar.")
@@ -98,7 +104,8 @@ def main():
             print(f"\n Mensagens do usuário: {selectedUser} ")
             for i, msg in enumerate(userMessages, 1):
                 print(f"{i}. Criptografada: {msg['cripto']}")
-                print(f"   Hash: {msg['hash']}\n")
+                print(f"   Hash: {msg['hash']}")
+                print(f"   Data/Hora: {msg.get('timestamp', 'N/A')}\n")
 
             try:
                 msgChoice = int(input("Escolha o ID da mensagem: "))
@@ -115,6 +122,7 @@ def main():
 
             print("\nMensagem original:")
             print(decrypted)
+            print(f"Data/Hora de envio: {msg.get('timestamp', 'N/A')}")
 
         elif option == "3":
             print("Saindo...")
